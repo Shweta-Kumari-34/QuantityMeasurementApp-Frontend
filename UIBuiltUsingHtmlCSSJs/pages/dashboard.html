@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quantity Measurement</title>
+
+    <link rel="stylesheet" href="../style/dashboardStyle.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- HEADER -->
+      <div class="header">
+        <h1>Welcome To Quantity Measurement</h1>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+      </div>
+
+      <!-- TYPE -->
+      <div class="section">
+        <p class="section-title">CHOOSE TYPE</p>
+
+        <div class="types">
+          <button class="type active" data-type="length">
+            <i class="fa-solid fa-ruler"></i>
+            <span>Length</span>
+          </button>
+
+          <button class="type" data-type="weight">
+            <i class="fa-solid fa-weight-scale"></i>
+            <span>Weight</span>
+          </button>
+
+          <button class="type" data-type="temperature">
+            <i class="fa-solid fa-temperature-half"></i>
+            <span>Temperature</span>
+          </button>
+
+          <button class="type" data-type="volume">
+            <i class="fa-solid fa-flask"></i>
+            <span>Volume</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ACTION -->
+      <div class="section">
+        <p class="section-title">CHOOSE ACTION</p>
+
+        <div class="actions">
+          <button class="action active" data-action="compare">
+            Comparison
+          </button>
+          <button class="action" data-action="convert">Conversion</button>
+          <button class="action" data-action="arithmetic">Arithmetic</button>
+        </div>
+      </div>
+
+      <div class="input-section">
+        <!-- VALUE 1 -->
+        <div class="input-box">
+          <label for="value1">Value 1</label>
+          <input type="number" id="value1" placeholder="Enter value" />
+
+          <label for="unit1">From Unit</label>
+          <select id="unit1"></select>
+        </div>
+
+        <!-- OPERATOR -->
+        <div id="operatorBox" class="operator">+</div>
+
+        <!-- VALUE 2 / TARGET -->
+        <div class="input-box" id="value2Box">
+          <label for="value2">Value 2</label>
+          <input type="number" id="value2" placeholder="Enter value" />
+
+          <label for="unit2">To Unit</label>
+          <select id="unit2"></select>
+        </div>
+      </div>
+
+      <!-- EXECUTE BUTTON -->
+      <div class="action-btn-container">
+        <button id="calculateBtn">CALCULATE</button>
+      </div>
+
+      <!-- RESULT -->
+      <div class="result">
+        <p>RESULT</p>
+        <h2 id="resultText">--</h2>
+      </div>
+    </div>
+
+    <script src="../script/dashboardScript.js"></script>
+  </body>
+</html>
