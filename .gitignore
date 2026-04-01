@@ -1,35 +1,42 @@
 # ===============================
-# Spring Boot / Maven
+# Spring Boot
 # ===============================
-HELP.md
 target/
+*.log
+*.class
 
 # ===============================
-# IDE
+# Maven Wrapper
+# ===============================
+.mvn/
+!/.mvn/wrapper/maven-wrapper.jar
+
+# ===============================
+# IDE Files
 # ===============================
 .classpath
 .project
-.settings
-.idea
-.vscode
+.settings/
+.idea/
+.vscode/
 
 # ===============================
-# Ignore everything
+# OS Files
 # ===============================
-*
+.DS_Store
+Thumbs.db
 
-# Allow important backend files
-!.gitignore
-!pom.xml
-!README.md
+# ===============================
+# Angular
+# ===============================
+node_modules/
+dist/
+.angular/
+coverage/
 
-# Allow src
-!src/
-!src/**
-
-# Allow Angular app
-!QuantityMeasurementAngular/
-!QuantityMeasurementAngular/**
-
-# But ignore node_modules inside Angular
-QuantityMeasurementAngular/node_modules/
+# ===============================
+# Logs
+# ===============================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
