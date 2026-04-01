@@ -1,0 +1,99 @@
+<div class="container">
+  <div class="header">
+    <h1>Welcome To Quantity Measurement</h1>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </div>
+
+  <div class="section">
+    <p class="section-title">CHOOSE TYPE</p>
+
+    <div class="types">
+      <button class="type" [class.active]="currentType === 'length'" (click)="setType('length')">
+        <i class="fa-solid fa-ruler"></i>
+        <span>Length</span>
+      </button>
+
+      <button class="type" [class.active]="currentType === 'weight'" (click)="setType('weight')">
+        <i class="fa-solid fa-weight-scale"></i>
+        <span>Weight</span>
+      </button>
+
+      <button
+        class="type"
+        [class.active]="currentType === 'temperature'"
+        (click)="setType('temperature')"
+      >
+        <i class="fa-solid fa-temperature-half"></i>
+        <span>Temperature</span>
+      </button>
+
+      <button class="type" [class.active]="currentType === 'volume'" (click)="setType('volume')">
+        <i class="fa-solid fa-flask"></i>
+        <span>Volume</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="section">
+    <p class="section-title">CHOOSE ACTION</p>
+
+    <div class="actions">
+      <button class="action" [class.active]="currentAction === 'compare'" (click)="setAction('compare')">
+        Comparison
+      </button>
+      <button class="action" [class.active]="currentAction === 'convert'" (click)="setAction('convert')">
+        Conversion
+      </button>
+      <button
+        class="action"
+        [class.active]="currentAction === 'arithmetic'"
+        [disabled]="currentType === 'temperature'"
+        (click)="setAction('arithmetic')"
+      >
+        Arithmetic
+      </button>
+    </div>
+  </div>
+
+  <div class="input-section">
+    <div class="input-box">
+      <label for="value1">Value 1</label>
+      <input type="number" id="value1" [(ngModel)]="value1" placeholder="Enter value" />
+
+      <label for="unit1">From Unit</label>
+      <select id="unit1" [(ngModel)]="unit1">
+        <option *ngFor="let unit of availableUnits" [value]="unit">{{ unit }}</option>
+      </select>
+    </div>
+
+    <div class="operator" *ngIf="currentAction === 'arithmetic'">+</div>
+
+    <div class="input-box">
+      <label for="value2">
+        {{ currentAction === 'convert' ? 'Target Unit' : 'Value 2' }}
+      </label>
+
+      <input
+        *ngIf="currentAction !== 'convert'"
+        type="number"
+        id="value2"
+        [(ngModel)]="value2"
+        placeholder="Enter value"
+      />
+
+      <label for="unit2">To Unit</label>
+      <select id="unit2" [(ngModel)]="unit2">
+        <option *ngFor="let unit of availableUnits" [value]="unit">{{ unit }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="action-btn-container">
+    <button id="calculateBtn" (click)="calculate()">CALCULATE</button>
+  </div>
+
+  <div class="result">
+    <p>RESULT</p>
+    <h2>{{ resultText }}</h2>
+  </div>
+</div>
