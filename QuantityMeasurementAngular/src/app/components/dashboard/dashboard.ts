@@ -27,15 +27,20 @@ export class DashboardComponent {
   value2: number | null = null;
   unit1 = 'ft';
   unit2 = 'ft';
+
   resultText = '--';
+
+  historyList: any[] = [];
+  showHistory = false;
+  selectedHistoryOperation = 'ALL';
+
+  historyOperations = ['ALL', 'COMPARE', 'CONVERT', 'ADD', 'SUBTRACT', 'DIVIDE'];
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private quantityService: QuantityService
-  ) {
-    this.updateUnits();
-  }
+  ) {}
 
   get availableUnits(): string[] {
     return this.units[this.currentType];
@@ -44,99 +49,89 @@ export class DashboardComponent {
   setType(type: string) {
     this.currentType = type;
 
-    if (this.currentType === 'temperature' && this.currentAction === 'arithmetic') {
-      this.currentAction = 'convert';
+    if (type === 'temperature') {
+      this.currentAction = 'compare';
     }
 
-    this.updateUnits();
-    this.resultText = '--';
+    this.unit1 = this.availableUnits[0];
+    this.unit2 = this.availableUnits[0];
   }
 
   setAction(action: string) {
-    if (this.currentType === 'temperature' && action === 'arithmetic') return;
     this.currentAction = action;
-    this.resultText = '--';
-  }
-
-  updateUnits() {
-    const list = this.availableUnits;
-    this.unit1 = list[0];
-    this.unit2 = list[0];
   }
 
   calculate() {
-    if (this.value1 === null || Number.isNaN(this.value1)) {
-      alert('Enter Value 1');
+    if (!this.value1) return alert('Enter value1');
+
+    if (this.currentAction !== 'convert' && !this.value2) {
+      return alert('Enter value2');
+    }
+
+    const payload: any = {
+      value1: this.value1,
+      unit1: this.unit1,
+      value2: this.value2,
+      unit2: this.unit2,
+      targetUnit: this.unit2,
+    };
+
+    let request;
+
+    switch (this.currentAction) {
+      case 'compare':
+        request = this.quantityService.compare({ ...payload, operation: 'COMPARE' });
+        break;
+      case 'convert':
+        request = this.quantityService.convert({ ...payload, operation: 'CONVERT' });
+        break;
+      case 'add':
+        request = this.quantityService.add({ ...payload, operation: 'ADD' });
+        break;
+      case 'subtract':
+        request = this.quantityService.subtract({ ...payload, operation: 'SUBTRACT' });
+        break;
+      case 'divide':
+        request = this.quantityService.divide({ ...payload, operation: 'DIVIDE' });
+        break;
+    }
+
+    request?.subscribe({
+      next: (res) => {
+        this.resultText =
+          res.unit === 'BOOLEAN'
+            ? res.result ? 'TRUE' : 'FALSE'
+            : `${res.result} ${res.unit}`;
+      },
+      error: (err) => {
+        this.resultText = err.error?.message || 'Error occurred';
+      },
+    });
+  }
+
+  loadAllHistory() {
+    this.quantityService.getAllHistory().subscribe((res) => {
+      this.historyList = res;
+      this.showHistory = true;
+    });
+  }
+
+  loadFilteredHistory() {
+    if (this.selectedHistoryOperation === 'ALL') {
+      this.loadAllHistory();
       return;
     }
 
-    if (
-      this.currentAction !== 'convert' &&
-      (this.value2 === null || Number.isNaN(this.value2))
-    ) {
-      alert('Enter Value 2');
-      return;
-    }
+    this.quantityService
+      .getHistoryByOperation(this.selectedHistoryOperation)
+      .subscribe((res) => {
+        this.historyList = res;
+        this.showHistory = true;
+      });
+  }
 
-    if (this.currentAction === 'compare') {
-      this.quantityService
-        .compare({
-          value1: this.value1,
-          unit1: this.unit1,
-          value2: this.value2!,
-          unit2: this.unit2,
-          operation: 'COMPARE',
-        })
-        .subscribe({
-          next: (res) => {
-            if (res?.unit === 'BOOLEAN') {
-              this.resultText = res.result == 1 ? 'TRUE' : 'FALSE';
-            } else if (typeof res === 'boolean') {
-              this.resultText = res ? 'TRUE' : 'FALSE';
-            } else if (typeof res?.result === 'boolean') {
-              this.resultText = res.result ? 'TRUE' : 'FALSE';
-            } else {
-              this.resultText = `${res?.result ?? ''} ${res?.unit ?? ''}`.trim();
-            }
-          },
-          error: (err) => {
-            this.resultText = err?.error?.message || err?.error || 'Compare failed';
-          },
-        });
-    } else if (this.currentAction === 'convert') {
-      this.quantityService
-        .convert({
-          value1: this.value1,
-          unit1: this.unit1,
-          targetUnit: this.unit2,
-          operation: 'CONVERT',
-        })
-        .subscribe({
-          next: (res) => {
-            this.resultText = `${res?.result ?? ''} ${res?.unit ?? ''}`.trim();
-          },
-          error: (err) => {
-            this.resultText = err?.error?.message || err?.error || 'Conversion failed';
-          },
-        });
-    } else if (this.currentAction === 'arithmetic') {
-      this.quantityService
-        .add({
-          value1: this.value1,
-          unit1: this.unit1,
-          value2: this.value2!,
-          unit2: this.unit2,
-          operation: 'ADD',
-        })
-        .subscribe({
-          next: (res) => {
-            this.resultText = `${res?.result ?? ''} ${res?.unit ?? ''}`.trim();
-          },
-          error: (err) => {
-            this.resultText = err?.error?.message || err?.error || 'Addition failed';
-          },
-        });
-    }
+  hideHistory() {
+    this.showHistory = false;
   }
 
   logout() {
