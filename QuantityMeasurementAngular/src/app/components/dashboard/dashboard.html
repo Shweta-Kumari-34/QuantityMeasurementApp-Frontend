@@ -9,12 +9,12 @@
 
     <div class="types">
       <button class="type" [class.active]="currentType === 'length'" (click)="setType('length')">
-        <i class="fa-solid fa-ruler"></i>
-        <span>Length</span>
+        <span>📏</span>
+<span>Length</span>
       </button>
 
       <button class="type" [class.active]="currentType === 'weight'" (click)="setType('weight')">
-        <i class="fa-solid fa-weight-scale"></i>
+       <span>⚖️</span>
         <span>Weight</span>
       </button>
 
@@ -23,12 +23,12 @@
         [class.active]="currentType === 'temperature'"
         (click)="setType('temperature')"
       >
-        <i class="fa-solid fa-temperature-half"></i>
+       <span>🌡️</span>
         <span>Temperature</span>
       </button>
 
       <button class="type" [class.active]="currentType === 'volume'" (click)="setType('volume')">
-        <i class="fa-solid fa-flask"></i>
+       <span>🧪</span>
         <span>Volume</span>
       </button>
     </div>
@@ -38,19 +38,47 @@
     <p class="section-title">CHOOSE ACTION</p>
 
     <div class="actions">
-      <button class="action" [class.active]="currentAction === 'compare'" (click)="setAction('compare')">
-        Comparison
-      </button>
-      <button class="action" [class.active]="currentAction === 'convert'" (click)="setAction('convert')">
-        Conversion
-      </button>
       <button
         class="action"
-        [class.active]="currentAction === 'arithmetic'"
-        [disabled]="currentType === 'temperature'"
-        (click)="setAction('arithmetic')"
+        [class.active]="currentAction === 'compare'"
+        (click)="setAction('compare')"
       >
-        Arithmetic
+        Comparison
+      </button>
+
+      <button
+        class="action"
+        [class.active]="currentAction === 'convert'"
+        (click)="setAction('convert')"
+      >
+        Conversion
+      </button>
+
+      <button
+        *ngIf="currentType !== 'temperature'"
+        class="action"
+        [class.active]="currentAction === 'add'"
+        (click)="setAction('add')"
+      >
+        Add
+      </button>
+
+      <button
+        *ngIf="currentType !== 'temperature'"
+        class="action"
+        [class.active]="currentAction === 'subtract'"
+        (click)="setAction('subtract')"
+      >
+        Subtract
+      </button>
+
+      <button
+        *ngIf="currentType !== 'temperature'"
+        class="action"
+        [class.active]="currentAction === 'divide'"
+        (click)="setAction('divide')"
+      >
+        Divide
       </button>
     </div>
   </div>
@@ -66,7 +94,13 @@
       </select>
     </div>
 
-    <div class="operator" *ngIf="currentAction === 'arithmetic'">+</div>
+    <div class="operator">
+      <span *ngIf="currentAction === 'compare'">=</span>
+      <span *ngIf="currentAction === 'convert'">→</span>
+      <span *ngIf="currentAction === 'add'">+</span>
+      <span *ngIf="currentAction === 'subtract'">−</span>
+      <span *ngIf="currentAction === 'divide'">÷</span>
+    </div>
 
     <div class="input-box">
       <label for="value2">
@@ -81,7 +115,7 @@
         placeholder="Enter value"
       />
 
-      <label for="unit2">To Unit</label>
+      <label for="unit2">{{ currentAction === 'convert' ? 'To Unit' : 'To Unit' }}</label>
       <select id="unit2" [(ngModel)]="unit2">
         <option *ngFor="let unit of availableUnits" [value]="unit">{{ unit }}</option>
       </select>
@@ -93,7 +127,57 @@
   </div>
 
   <div class="result">
-    <p>RESULT</p>
+    <p class="section-title">RESULT</p>
     <h2>{{ resultText }}</h2>
+  </div>
+
+  <div class="history-section">
+    <div class="history-header">
+      <h2>History</h2>
+
+      <div class="history-controls">
+        <button type="button" (click)="loadAllHistory()">View All History</button>
+
+        <select [(ngModel)]="selectedHistoryOperation">
+          <option *ngFor="let op of historyOperations" [value]="op">
+            {{ op }}
+          </option>
+        </select>
+
+        <button type="button" (click)="loadFilteredHistory()">Filter History</button>
+        <button type="button" (click)="hideHistory()">Hide</button>
+      </div>
+    </div>
+
+    <div *ngIf="showHistory">
+      <table *ngIf="historyList.length > 0" class="history-table">
+        <thead>
+          <tr>
+            <th>Result</th>
+            <th>Unit</th>
+            <th>Operation</th>
+            <th>Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of historyList">
+            <td>
+              {{
+                item.unit === 'BOOLEAN'
+                  ? (item.result == 1 ? 'TRUE' : 'FALSE')
+                  : item.result
+              }}
+            </td>
+            <td>{{ item.unit }}</td>
+            <td>{{ item.operation }}</td>
+            <td>{{ item.message }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p *ngIf="historyList.length === 0" class="no-history">
+        No history found.
+      </p>
+    </div>
   </div>
 </div>
