@@ -47,25 +47,24 @@
             </small>
           </div>
 
-          <div class="form-group password-field">
-            <label for="loginPassword">Password</label>
-            <input
-              [type]="loginPasswordVisible ? 'text' : 'password'"
-              id="loginPassword"
-              name="loginPassword"
-              [(ngModel)]="loginData.password"
-              placeholder="Enter your password"
-            />
-            <i
-              class="fa-solid toggle-password"
-              [class.fa-eye]="loginPasswordVisible"
-              [class.fa-eye-slash]="!loginPasswordVisible"
-              (click)="toggleLoginPassword()"
-            ></i>
-            <small class="error-msg" *ngIf="loginErrors.password">
-              {{ loginErrors.password }}
-            </small>
-          </div>
+        <div class="form-group password-field">
+  <label for="loginPassword">Password</label>
+  <input
+    [type]="loginPasswordVisible ? 'text' : 'password'"
+    id="loginPassword"
+    name="loginPassword"
+    [(ngModel)]="loginData.password"
+    placeholder="Enter your password"
+  />
+  <i
+    class="fa-solid toggle-password"
+    [ngClass]="loginPasswordVisible ? 'fa-eye' : 'fa-eye-slash'"
+    (click)="toggleLoginPassword()"
+  ></i>
+  <small class="error-msg" *ngIf="loginErrors.password">
+    {{ loginErrors.password }}
+  </small>
+</div>
 
           <div class="form-options">
             <label class="remember-me">
@@ -117,26 +116,25 @@
               {{ signupErrors.email }}
             </small>
           </div>
-
-          <div class="form-group password-field">
-            <label for="signupPassword">Password</label>
-            <input
-              [type]="signupPasswordVisible ? 'text' : 'password'"
-              id="signupPassword"
-              name="signupPassword"
-              [(ngModel)]="signupData.password"
-              placeholder="Create password"
-            />
-            <i
-              class="fa-solid toggle-password"
-              [class.fa-eye]="signupPasswordVisible"
-              [class.fa-eye-slash]="!signupPasswordVisible"
-              (click)="toggleSignupPassword()"
-            ></i>
-            <small class="error-msg" *ngIf="signupErrors.password">
-              {{ signupErrors.password }}
-            </small>
-          </div>
+<div class="form-group password-field">
+  <label for="signupPassword">Password</label>
+  <input
+    [type]="signupPasswordVisible ? 'text' : 'password'"
+    id="signupPassword"
+    name="signupPassword"
+    [(ngModel)]="signupData.password"
+    placeholder="Create password"
+  />
+  <i
+    class="fa-solid toggle-password"
+    [ngClass]="signupPasswordVisible ? 'fa-eye' : 'fa-eye-slash'"
+    (click)="toggleSignupPassword()"
+  ></i>
+  <small class="error-msg" *ngIf="signupErrors.password">
+    {{ signupErrors.password }}
+  </small>
+</div>
+         
 
           <div class="form-group">
             <label for="mobileNumber">Mobile Number</label>
@@ -163,3 +161,4 @@
     </div>
   </div>
 </div>
+
