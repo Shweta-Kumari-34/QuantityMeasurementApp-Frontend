@@ -56,4 +56,16 @@ export class QuantityService {
       headers: this.getHeaders(),
     });
   }
+
+  getAllHistory(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/history`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  getHistoryByOperation(operation: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/history/${operation}`, {
+      headers: this.getHeaders(),
+    });
+  }
 }
